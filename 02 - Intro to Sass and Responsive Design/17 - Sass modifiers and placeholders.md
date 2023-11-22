@@ -1,0 +1,31 @@
+# BEM modifiers and Sass placeholders
+
+I want to create a BEM "modifier" that will add a background-color of green to the widget. First, let's create our modifier selector. This is something that we'll add to the `widget` element selector, so inside the `&__widget` rules, we'll add `&--green` and add a `background-color: green` rule. Let's also convert that to hsl and make it a little darker with the color picker. Then we'll save.
+
+In order to make one of the widgets green, we'll need to add that class of `grid__widget--green` to the HTML element. I'll add it to the second one. And now when we load the website, the second widget is green! What's happening is we've left that magenta purple color on the `grid__widget` selector to be a default style. Then the `green` modifier is overwriting it for the second widget since it has that class. The reason that it's overwriting it is because the `green` modifier comes after the default `&__widget` styles in the final CSS file. And according to the cascade of CSS, latter styles that have a similar specificity value will overwrite previous ones. And since the `grid__widget` and `grid__widget--green` selectors are both class names, they are on a equal specificity level, so the later one is the one that ends up `winning` and getting applied.
+
+Looking at our HTML classes, you might feel like the green widget having both the `grid__widget` and `grid__widget--green` classes is a little bit repetitive, or just kinda long in the classnames. There are a couple way in Sass to still keep the BEM modifier behavior but without needing to write both class names in the HTML for that widget.
+
+One way is by using the Sass `@extend` at-rule. We can use this to `copy` the rules from `grid__widget` into `grid__widget--green` without duplicating any style rules.
+
+In our `_grid.scss` file, in the `&--green` selector, we can write `@extend .grid__widget`. This will apply all the `.grid__widget` styles into the `.grid__widget--green` class. That means we can go into our index.html file and delete the `grid__widget` class from the second widget. Now when we save and look at our website, the widget is still green and it has all the other widget styles that we added. If we inspect that widget, we can see that the green background-color is getting added from the `grid__widget--green` class, and the padding is getting loaded from a compound selector for the `.grid__widget` and `.grid__widget--green` classes.
+
+Let's look at the rule in our final style.css file. If we open it and then save to trigger Prettier to format it, we can see that style rule with both those classes in the selector. So the `@extend` at-rule essentially added the `.grid__widget--green` selector to the `.grid__widget` selector rules, which is great!
+
+However, notice in our `green` modifier that we had to fully type out the `.grid__widget` class in order for it to work. If we try to use the ampersand to load the parent selector which would be `grid__widget` we get an error when compiling that says "parent selectors aren't allowed here."
+
+There is a workaround you can do by creating a Sass variable that will load that parent class. In the `&__widget` selector, we're going to create a Sass variable called `$widget` and set it to the ampersand. This will set the $widget variable to the selector it is in, which is `grid__widget`. Then in the `green` modifier selector, we can write `@extend` hashtag and then in curly brackets, `$widget`. The hashtag curly brackets is how you can load a Sass variable's value in a string like in a Sass selector name. This is called interpolation. The end result is basically the same as writing out `@extend .grid**widget`. I don't really use this very often just because I find it's the same amount of work, and it seems clearer to me to write out the whole parent class selector. So let's delete that and return it back to `@extend .grid**widget`.
+
+Also, one word of advice with using `@extend` is to only use it for elements that are closely related to each other, like we have here with the `grid__widget` and `grid__widget--green` selectors. If you start using `@extend` to copy style rules from unrelated elements, especially when they're from different Sass files, it can cause some confusion if you're having to track down a bug in the website later on.
+
+And there's yet another way in Sass that we can load the widget default styles in the modifier widget selectors. This is by putting the default widget styles like the padding in a Sass placeholder. A placeholder is a special selector that contains a set of style rules. It won't generate CSS rules for itself but only when it's actually used in a selector. Let me show you what this looks like.
+
+I'm going to create the placeholder up at the top of `_grid.scss`. We can create by typing the percent sign and then the name of the placeholder. So I'll create `%widget` and then in the curly brackets, I'll move the `padding` style from the `.grid__widget` selector.
+
+Then when we want to load the widget rule, like in `.grid__widget--green` we can do that with the `@extend` at-rule. However, this takes away the padding from the `.grid__widget` selector. So what I might do in the real world would be to move that magenta background style rule into another modifier selector called `&--magenta` and use the `@extend %widget` in that as well. Then in the index.html file, we'll add the `--magenta` to the first and last widget class names.
+
+In our website now the widgets are all loading with the correct padding and background colors.
+
+The `@extend` and placeholder Sass features are very similar, as you might have noticed. They both allow you to copy and paste style rules into multiple different selectors. I have read that some people recommend not using `@extend` because it creates that compound selector with all the classes using them, and the more you extend it, the longer that compound selector is. So they recommend to use placeholders whenever possible, when you have those generic styles and then building off of them with different modifier styles like we did with the different widgets.
+
+I personally don't use `@extend` or placeholders that much, but they can come in handy sometimes when you want to reuse rules.
