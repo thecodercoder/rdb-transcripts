@@ -1,0 +1,83 @@
+# Semantic HTML tags for accessible headers
+
+It can be difficult to decide what HTML tags to use for headings in the website content. H-tags do come with default browser styles so that h1 tags are the biggest, h2 tags smaller, and so on.
+
+However, since we have CSS we can style any h-tag any way we want, so you shouldn't choose which h-tag to use based on how big it is. In general, it's important to use semantic HTML tags, which are tags that have meaning attached to them, to help give the website visitor an idea of how to parse the information on the page.
+
+For example, h-tags are meant for headings and titles, p-tags are for paragraph content, and main, aside, header, and footer tags help identify different parts of th website.
+
+Semantic tags are very important for accessibility, as screen readers can parse HTML tags in order to help the user understand what's on the website, and the users can also jump between heading tags to help navigate the website more quickly and efficiently.
+
+Also, I think using the different semantic tags helps when you're parsing through the HTML to find different things.
+
+Generally, I would recommend to use semantic tags as much as possible, when the tag would give additional context to the type of content that is inside it. Div and span tags are not semantic tags, so use those only when a semantic tag wouldn't make sense.
+
+Going back to h-tags, the best way to decide which one to use is to think about your website content like an outline, where you have different sections of the website, each with a header. And sections can have sub-sections with sub-headers. So if you read through the headings, they should give you an overview of what the website is about.
+
+To help illustrate this, let's go to our Figma design, and plan out what h-tags we want to use for the different parts of the website.
+
+Next to the desktop frame, I'm going to create a new text element to write down the different headings in an outline format, and what h-tags we want to use for them. That way, we can refer back to it as we create the markup for the website.
+
+When creating the outline with h-tags, it's considered best practice to start with h1 as your main header, and increase the number by 1 for sub-headers without skipping numbers. So for example, the h1 tag can have sub-topics, and those sub-topics should contain h2 tags.
+
+Then, h2 tags can have sub-topics with h3 tags, and so on. You shouldn't skip and go from h1 to h3, or from h2 to h4. It's also a good idea to not have too many levels in the outline, to keep it simpler. In HTML, you can go all the way up to H6 tags, but I usually stop at H3 or H4.
+
+The main header for this website is the hero text, "Find that elusive unicorn." We can tell that it's the most prominent header since it is the largest text on the site and it comes first. So I'll add "H1: Find that elusive unicorn" to the outline.
+
+Under the hero is the 3-column features section. You could put each of the titles there in an H2 tag. But if we think about the kind of information that's in each of those 3 columns, they actually could be grouped together as features of the product, Mythos. And it could be helpful for screen readers to have an H2 tag that says "Features" to tell the screen reader what the information in that section is about.
+
+So even though the design doesn't have a "Features" subheader, we can actually add a hidden H2 tag that screen readers can still detect, but will not visually show up on the page. However, you do have to hide it in a specific way. If you hide the hidden H2 tag with `display: none` or setting the width and height to zero, the content will be hidden from screen readers as well, which we don't want.
+
+Fortunately, there is a way that we can make the header visually hidden but that screen readers can still detect it. I got this method from the Accessibility Developer Guide website, which you can find by going to a new tab and searching for "accessibility developer guide". And it should be the first result.
+
+I refer to this website a lot when I'm trying to figure out anything related to accessibility, and I highly recommend using this resource as a reference.
+
+On the website, if you click on "Examples" in the left sidebar, they have example code for different best practices on websites. If we click on the "Hiding elements" section, and then click on the first article, "Hiding elements visually by moving them off-screen," they have some CSS that you can copy.
+
+What it's doing is absolutely positioning the element and moving it 10,000 pixels to the left, and sizing it at 1px so it still technically exists in the website. Let's copy this `visually-hidden` class and styles to use in our code.
+
+In VS Code, I'm going to put it in our boilerplate styles, at the end. That way when we start adding the markup, we can add that `visually-hidden` helper class to the hidden H2 tag, as well as any other website content that we want to be readable by screen readers but not visually appear on the page.
+
+In our outline, I will add the hidden H2 tag nested under the H1 tag as "H2 (hidden): Features". Then nested under the H2 tag I'll add the titles of each of the 3-columns as H3 tags. So "H3: AI-powered matching," "H3: Immediate notifications," and "H3: Protected payments."
+
+Under the 3-column Features section is the Full-width Feature section. The title here can be added as an H2 tag, nested under the main H1 tag. So I'll write "H2: Angel investment matching" and just shorten the text a bit on the outline. And notice this H2 tag is at the same level of indentation as the hidden H2 Features tag.
+
+Next is the testimonial quote section, which doesn't have a header. I wouldn't make the quote text itself an h-tag, since it's not really a title. But I think it would make sense to add another hidden h2 tag with the text "Testimonial" for this section.
+
+So under the H2 for "Angel investment matching" I'll add another H2 at the same indent level and write "H2 (hidden): Testimonial".
+
+After that, we have the full width CTA section, so I'll add another H2 tag and add the "Get started with Mythos today" the title text.
+
+Now, that takes care of the main content of the website, between the header and the footer. But, in order to make the website more easily navigable by screen readers, we can also add more visually hidden h-tags that say "header" and "footer."
+
+Now, this next step may go against what you've heard in terms of putting h-tags on websites, but I would actually make the "header" and "footer" h-tags either h1 tags or h2 tags.
+
+In the past, you were only supposed to have one h1 tag per page so that it wouldn't confuse search engines, but now that we have semantic HTML tags like "header," "main," and "footer," Google and other search engines can understand the difference between an h1 tag in the header and in the main content.
+
+You can read more about this info on the Accessibility Developer Guide website, in the Examples, Headings, "Multiple h1 okay for SEO?" article.
+
+Just to note, having multiple h1 tags on the page is a practice that is still considered "bad practice"-- and so it's possible that if you use multiple h1 tags you may encounter pushback from a client or coworker who is not familiar with the new standards.
+
+If that happens, you could also set the "header" and "footer" tags as h2 tags, so that there will only be 1 h1 tag.
+
+But this is not technically best practice either, since the "header" h2 tag comes before the main h1 tag, and I just told you to go in order and not skip tags, right?
+
+Unfortunately, as you'll read in that article I linked, there's no perfect solution for this. But in their opinion, and my own, the benefits outweigh any potential costs.
+
+Even if these approaches doesn't strictly follow best practice, a screen reader will still be able to navigate these tags, whether you use h1 or h2. And allowing screen readers the ability to easily navigate to the header and footer sections of the website is the most important thing.
+
+Going back to our outline in Figma, I'll add a new header at the top, before the main H1 tag that says "H1/H2 (hidden): Header." And at the bottom I'll add another tag saying "H1/H2 (hidden): Footer." And both those will be on the same indent level as our main H1 tag.
+
+I'm going to close by saying that I'm not by any means an accessibility expert, but I do try to follow the guidelines and am always learning more about it. Accessibility is often overlooked or seen as an afterthought by web developers, so if you can gain even some basic accessibility skills, you can help your company, client, and make yourself more marketable in the process.
+
+That's it for the global styles!
+
+Since we've finished one big chunk of the code, this is probably a good time to create a commit in Git to save our code. So I'm going to open GitHub Desktop, and in the "Changes" tab I'm going to check over all the files that are changed and just make sure they look good and that we're not including and files that we don't want to add to Git.
+
+Once everything looks good, at the bottom I'll write a commit message like "Add global styles" and then click the "commit to main" button.
+
+In this course I am committing my changes all on the main branch, just because I'm one developer and we're doing the initial commit to build the website from the beginning.
+
+I wouldn't normally do this, if I was working on a team-- in those situations you should be working on separate feature branches and then merging them into the main branch. But for this course we're keeping it simple and doing everything on main.
+
+Next up, we're going to start building the website out, starting with the top navigation!
